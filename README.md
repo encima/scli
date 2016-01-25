@@ -6,11 +6,24 @@ An idea that came to me as I was writing [bookshel](https://github.com/encima/bo
 
 # How?
 
-Clone the repo
+Clone the repo and run it!
 
 ```
 git clone https://github.com/encima/scli
+pip install -r requirements.txt
 ```
+
+# Usage
+
+usage: scli.py [-h] [-l LINK_ADDRESS] [-f F_NAME] [-s SPEED]
+
+Process some integers.
+
+optional arguments:
+  -h, --help       show this help message and exit
+  -l LINK_ADDRESS  Use a link as the source
+  -f F_NAME        Use a file as the source
+  -s SPEED         Set the speed (deafult 0.2)
 
 # TODO
 
