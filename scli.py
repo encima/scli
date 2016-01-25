@@ -2,7 +2,7 @@ import time, sys, argparse
 from bs4 import BeautifulSoup
 from urllib import urlopen
 from subprocess import call
-from blessings import Terminal
+from blessed import Terminal
 
 def read_file(f_name, speed):
     words = []
@@ -23,10 +23,12 @@ def read_link(address, speed):
 def speed_read(words, speed):
     term = Terminal()
     call(['clear'])
-    for w in words:
-        print w.strip().center(term.width - 10)
-        time.sleep(speed)
-        call(["clear"])
+    with term.fullscreen():
+        for w in words:
+            printable = w.decode('utf-8')
+            print(term.move_y(term.height // 2) + term.center(printable).rstrip())
+            time.sleep(speed)
+            call(["clear"])
 
 
 if __name__ == '__main__':
