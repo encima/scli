@@ -4,21 +4,21 @@ from urllib import urlopen
 from subprocess import call
 from blessed import Terminal
 
-def read_file(f_name, speed):
+def read_file(f_name):
     words = []
     with open(f_name) as f:
 	    for line in f:
 		    words += line.split(' ')
-    speed_read(words, speed)
+    return words
 
 
 # http://docs.python-guide.org/en/latest/scenarios/scrape/
-def read_link(address, speed):
+def read_link(address):
     page = urlopen(address).read()
     soup = BeautifulSoup(page, 'html.parser')
     content = soup.body.get_text()
 #TODO get straight body content
-    speed_read(content.split(' '), speed)
+    return content.split(' ')
 
 def speed_read(words, speed):
     term = Terminal()
@@ -26,22 +26,32 @@ def speed_read(words, speed):
     with term.fullscreen():
         for w in words:
             printable = w.decode('utf-8')
-            print(term.move_y(term.height // 2) + term.center(printable).rstrip())
+            print(term.move_y(term.height // 2) + term.center(term.bold(printable)).rstrip())
             time.sleep(speed)
             call(["clear"])
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Speed read!')
     parser.add_argument('-l', action='store', dest='link_address',
                     help='Use a link as the source')
     parser.add_argument('-f', action='store', dest='f_name',
                     help='Use a file as the source')
+    parser.add_argument('-p', action='store', dest='plain',
+                    help='Use provided text as the source (surround with quotes)')
     parser.add_argument('-s', action='store', dest='speed', default=0.2,
                     help='Set the speed', type=float)
 
     args = parser.parse_args()
-    if args.f_name is not None:
-        read_file(args.f_name, args.speed)
+    text = ""
+    if args.f_name is not None and 'txt' in args.f_name:
+        text = read_file(args.f_name)
     elif args.link_address is not None:
-        read_link(args.link_address, args.speed)
+        text = read_link(args.link_address)
+    elif args.plain is not None:
+        text = args.plain.split(' ')
+    else:
+        parser.print_usage()
+
+    if len(text) > 0:
+        speed_read(text, args.speed)

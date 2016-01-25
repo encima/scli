@@ -30,4 +30,4 @@ optional arguments:
 * [] Better formatting of retrieved HTML
 * [] Attempt to extract only article content
 * [] Support for more than just txt
-* [] Support for plain text as an argument
+* [x] Support for plain text as an argument
