@@ -17,7 +17,7 @@ scli/
 env/
 bin/ 
 include/ 
-
+pip-selfcheck.json
 build/
 develop-eggs/
 dist/
