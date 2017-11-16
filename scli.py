@@ -1,8 +1,7 @@
 import time, sys, argparse
-from bs4 import BeautifulSoup
-from urllib import urlopen
 from subprocess import call
 from blessed import Terminal
+from newspaper import Article
 
 def read_file(f_name):
     words = []
@@ -14,18 +13,17 @@ def read_file(f_name):
 
 # http://docs.python-guide.org/en/latest/scenarios/scrape/
 def read_link(address):
-    page = urlopen(address).read()
-    soup = BeautifulSoup(page, 'html.parser')
-    content = soup.body.get_text()
-#TODO get straight body content
-    return content.split(' ')
+    page = Article(address, language='en')
+    page.download()
+    page.parse()
+    return page.text.split(' ')
 
 def speed_read(words, speed):
     term = Terminal()
     call(['clear'])
     with term.fullscreen():
         for w in words:
-            printable = w.decode('utf-8')
+            printable = w
             print(term.move_y(term.height // 2) + term.center(term.bold(printable)).rstrip())
             time.sleep(speed)
             call(["clear"])
