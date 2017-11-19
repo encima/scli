@@ -2,6 +2,9 @@ import time, sys, argparse
 from subprocess import call
 from blessed import Terminal
 from newspaper import Article
+from datetime import datetime
+import csv
+import os
 
 def read_file(f_name):
     words = []
@@ -37,6 +40,7 @@ if __name__ == '__main__':
                     help='Use a file as the source')
     parser.add_argument('-p', action='store', dest='plain',
                     help='Use provided text as the source (surround with quotes)')
+    parser.add_argument('-d', action='store', dest='db', help='File to store read articles', default='/home/encima/vimwiki/scli.csv')
     parser.add_argument('-s', action='store', dest='speed', default=0.2,
                     help='Set the speed', type=float)
 
@@ -53,3 +57,10 @@ if __name__ == '__main__':
 
     if len(text) > 0:
         speed_read(text, args.speed)
+        mode = 'a'
+        if not os.path.exists(args.db):
+            mode = 'w+'
+        fd = open(args.db, mode)
+        r = args.link_address if args.link_address else args.f_name
+        fd.write('{}, {}\n'.format(r, datetime.today()))
+        fd.close()
